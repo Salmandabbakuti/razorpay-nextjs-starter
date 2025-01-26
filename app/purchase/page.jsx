@@ -1,5 +1,7 @@
 "use client";
 import { useEffect } from "react";
+import { createOrder, verifyPayment } from "@/app/actions";
+
 export default function Purchase() {
   useEffect(() => {
     const script = document.createElement("script");
@@ -13,17 +15,19 @@ export default function Purchase() {
 
   const handlePurchase = async () => {
     try {
-      const response = await fetch("/api/razorpay/create-order", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          amount: 5999,
-          currency: "INR"
-        })
-      });
-      const order = await response.json();
+      // const response = await fetch("/api/razorpay/create-order", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json"
+      //   },
+      //   body: JSON.stringify({
+      //     amount: 5999,
+      //     currency: "INR"
+      //   })
+      // });
+      // const order = await response.json();
+      const order = await createOrder({ amount: 5999, currency: "INR" });
+      console.log("order", order);
       const options = {
         key: "rzp_test_qQtJjEmANYGZzQ", // Replace with your Razorpay key_id
         amount: order.amount,
@@ -32,7 +36,7 @@ export default function Purchase() {
         description: "Pro Plan Subscription",
         image: "https://picsum.photos/200",
         order_id: order.id, // This is the order_id created in the backend
-        // callback_url: "http://localhost:3000/verify-payment", // Your success URL, razorpay sends post request with (orderid, paymentid, signature) can be used to verify payment aswell
+        // callback_url: "http://localhost:3000/api/razorpay/verify-payment", // Your success URL, razorpay sends post request with (orderid, paymentid, signature) can be used to verify payment aswell
         redirect: false, // This is important to prevent redirection to the success URL on failure
         prefill: {
           name: "John Doe",
@@ -43,18 +47,23 @@ export default function Purchase() {
           color: "#007bff"
         },
         handler: async function (response) {
-          const verifyResponse = await fetch("/api/razorpay/verify-payment", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature
-            })
+          // const verifyResponse = await fetch("/api/razorpay/verify-payment", {
+          //   method: "POST",
+          //   headers: {
+          //     "Content-Type": "application/json"
+          //   },
+          //   body: JSON.stringify({
+          //     razorpay_order_id: response.razorpay_order_id,
+          //     razorpay_payment_id: response.razorpay_payment_id,
+          //     razorpay_signature: response.razorpay_signature
+          //   })
+          // });
+          // const data = await verifyResponse.json();
+          const data = await verifyPayment({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature
           });
-          const data = await verifyResponse.json();
           if (data.ok) {
             alert("Payment successful");
             window.location.href = "/payment-success";
