@@ -4,8 +4,8 @@ import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils";
 export async function POST(req) {
   try {
     const data = await req.json();
-    console.log("Received webhook payload:", data);
-    const signature = req.headers["x-razorpay-signature"];
+    console.log("Received webhook payload:", data, req.headers);
+    const signature = req.headers["X-Razorpay-Signature"];
     console.log("Received webhook signature:", signature);
     const isValid = validateWebhookSignature(
       JSON.stringify(data),
