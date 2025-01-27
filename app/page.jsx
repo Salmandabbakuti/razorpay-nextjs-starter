@@ -1,4 +1,3 @@
-import Image from "next/image";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -12,7 +11,11 @@ export default function Home() {
         </a>
       </main>
       <footer className={styles.footer}>
-        <a href="" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://github.com/Salmandabbakuti"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Made with ❤️ by <strong>Salman</strong>
         </a>
       </footer>
