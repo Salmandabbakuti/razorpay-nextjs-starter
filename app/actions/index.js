@@ -6,7 +6,7 @@ export const createOrder = async (orderData) => {
   console.log("creating order in action");
   const { amount, currency } = orderData;
   if (!amount || !currency) {
-    throw new Error("amount and currency are required!");
+    throw new Error("amount and currency are required to create order!");
   }
   const options = {
     amount: amount * 100,

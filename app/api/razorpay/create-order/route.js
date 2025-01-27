@@ -8,7 +8,7 @@ export async function POST(req) {
     const { amount, currency } = data;
     if (!amount || !currency)
       return NextResponse.json(
-        { message: "amount and currency are required!" },
+        { message: "amount and currency are required to create order!" },
         { status: 400 }
       );
     const options = {
