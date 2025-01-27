@@ -3,7 +3,7 @@ import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils";
 
 export async function POST(req) {
   try {
-    const data = await req.text();
+    const data = await req.json();
     console.log("Received webhook payload:", data);
     const signature = req.headers["x-razorpay-signature"];
     console.log("Received webhook signature:", signature);
@@ -32,7 +32,7 @@ export async function POST(req) {
   } catch (error) {
     console.error("Error processing webhook:", error);
     return NextResponse.json(
-      { message: "error processing webhook" },
+      { message: "Failed to process webhook", error: error.message },
       { status: 500 }
     );
   }

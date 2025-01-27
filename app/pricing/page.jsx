@@ -19,24 +19,24 @@ export default function Pricing() {
 
   const handlePurchase = async () => {
     try {
-      const response = await fetch("/api/razorpay/create-order", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          amount: 5999,
-          currency: "INR"
-        })
-      });
-      // check if response is ok
-      const order = await response.json();
-      if (!response.ok) {
-        console.error("Failed to create order:", response);
-        alert(`Failed to create order: ${order?.message}`);
-        return;
-      }
-      // const order = await createOrder({ amount: 5999, currency: "INR" }); // create order using action
+      // const response = await fetch("/api/razorpay/create-order", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json"
+      //   },
+      //   body: JSON.stringify({
+      //     amount: 5999,
+      //     currency: "INR"
+      //   })
+      // });
+      // // check if response is ok
+      // const order = await response.json();
+      // if (!response.ok) {
+      //   console.error("Failed to create order:", response);
+      //   alert(`Failed to create order: ${order?.message}`);
+      //   return;
+      // }
+      const order = await createOrder({ amount: 5999, currency: "INR" }); // create order using action
       console.log("order created:", order);
       const options = {
         key: "rzp_test_qQtJjEmANYGZzQ", // Replace with your Razorpay key_id
