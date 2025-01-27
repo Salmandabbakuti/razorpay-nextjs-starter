@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils";
 
 export async function POST(req) {
@@ -9,20 +10,28 @@ export async function POST(req) {
     const isValid = validateWebhookSignature(
       JSON.stringify(data),
       signature,
-      process.env.RAZORPAY_KEY_SECRET
+      process.env.RAZORPAY_WEBHOOK_SECRET
     );
     if (!isValid) {
       console.error("Invalid webhook signature");
-      return Response.json(
-        { message: "invalid webhook signature" },
+      return NextResponse.json(
+        { message: "Invalid webhook signature" },
         { status: 400 }
       );
     }
     // Process the webhook payload
-    return Response.json({ received: true });
+    const { event, payload } = JSON.parse(data);
+    switch (event) {
+      case "payment.captured":
+        console.log("Captured payment entity:", payload.payment.entity);
+        break;
+      default:
+        console.log("Unhandled webhook event:", event);
+    }
+    return NextResponse.json({ received: true });
   } catch (error) {
     console.error("Error processing webhook:", error);
-    return Response.json(
+    return NextResponse.json(
       { message: "error processing webhook" },
       { status: 500 }
     );

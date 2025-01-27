@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function PaymentSuccess() {
   return (
     <div style={styles.container}>
@@ -6,9 +8,9 @@ export default function PaymentSuccess() {
         <p style={styles.message}>
           Thank you for your purchase! Your subscription is now active.
         </p>
-        <a href="/" style={styles.button}>
+        <Link href="/" style={styles.button}>
           Go to Home
-        </a>
+        </Link>
       </div>
     </div>
   );
@@ -19,7 +21,7 @@ const styles = {
     fontFamily: "Arial, sans-serif",
     margin: 0,
     padding: 0,
-    backgroundColor: "#f5f5f5",
+    // backgroundColor: "#f5f5f5",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

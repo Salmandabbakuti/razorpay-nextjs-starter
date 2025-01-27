@@ -1,8 +1,12 @@
 "use client";
 import { useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { createOrder, verifyPayment } from "@/app/actions";
 
-export default function Purchase() {
+export default function Pricing() {
+  const router = useRouter();
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -15,19 +19,25 @@ export default function Purchase() {
 
   const handlePurchase = async () => {
     try {
-      // const response = await fetch("/api/razorpay/create-order", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json"
-      //   },
-      //   body: JSON.stringify({
-      //     amount: 5999,
-      //     currency: "INR"
-      //   })
-      // });
-      // const order = await response.json();
-      const order = await createOrder({ amount: 5999, currency: "INR" });
-      console.log("order", order);
+      const response = await fetch("/api/razorpay/create-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          amount: 5999,
+          currency: "INR"
+        })
+      });
+      // check if response is ok
+      const order = await response.json();
+      if (!response.ok) {
+        console.error("Failed to create order:", response);
+        alert(`Failed to create order: ${order?.message}`);
+        return;
+      }
+      // const order = await createOrder({ amount: 5999, currency: "INR" }); // create order using action
+      console.log("order created:", order);
       const options = {
         key: "rzp_test_qQtJjEmANYGZzQ", // Replace with your Razorpay key_id
         amount: order.amount,
@@ -59,18 +69,27 @@ export default function Purchase() {
           //   })
           // });
           // const data = await verifyResponse.json();
-          const data = await verifyPayment({
+          // if (!verifyResponse.ok) {
+          //   console.error("Payment verification failed:", data);
+          //   router.push("/payment-cancel");
+          // } else {
+          //   console.log("Payment verified:", data);
+          //   router.push("/payment-success");
+          // }
+          // or verify payment using action
+          await verifyPayment({
             razorpay_order_id: response.razorpay_order_id,
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_signature: response.razorpay_signature
-          });
-          if (data.ok) {
-            alert("Payment successful");
-            window.location.href = "/payment-success";
-          } else {
-            alert("Payment failed");
-            window.location.href = "/payment-cancel";
-          }
+          })
+            .then((data) => {
+              console.log("Payment verified:", data);
+              router.push("/payment-success");
+            })
+            .catch((error) => {
+              console.error("Payment verification failed:", error);
+              router.push("/payment-cancel");
+            });
         }
       };
       const rzp = new window.Razorpay(options);
@@ -100,8 +119,25 @@ export default function Purchase() {
           </p>
           <p style={styles.planPrice}>₹5999 INR</p>
           <button style={styles.button} onClick={handlePurchase}>
-            Subscribe
+            Purchase
           </button>
+          <br />
+          <Link
+            href="/"
+            style={{
+              display: "inline-block",
+              marginTop: "10px",
+              padding: "10px 20px",
+              backgroundColor: "#007bff",
+              color: "#fff",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontSize: "16px"
+            }}
+          >
+            Back
+          </Link>
         </div>
       </div>
     </div>
@@ -113,7 +149,7 @@ const styles = {
     fontFamily: "Arial, sans-serif",
     margin: 0,
     padding: 0,
-    backgroundColor: "#f5f5f5",
+    // backgroundColor: "#f5f5f5",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

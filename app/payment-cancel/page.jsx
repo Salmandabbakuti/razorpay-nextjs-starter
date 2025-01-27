@@ -1,15 +1,17 @@
+import Link from "next/link";
+
 export default function PaymentCancel() {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <h1 style={styles.title}>Payment Canceled</h1>
+        <h1 style={styles.title}>Payment Cancelled</h1>
         <p style={styles.message}>
-          It seems you have canceled the payment. If this was a mistake, you can
-          try again.
+          It seems you have cancelled the payment. If this was a mistake, you
+          can try again.
         </p>
-        <a href="/purchase" style={styles.button}>
+        <Link href="/" style={styles.button}>
           Go to Home
-        </a>
+        </Link>
       </div>
     </div>
   );
@@ -20,7 +22,7 @@ const styles = {
     fontFamily: "Arial, sans-serif",
     margin: 0,
     padding: 0,
-    backgroundColor: "#f5f5f5",
+    // backgroundColor: "#f5f5f5",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

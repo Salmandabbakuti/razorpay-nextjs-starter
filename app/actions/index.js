@@ -6,7 +6,7 @@ export const createOrder = async (orderData) => {
   console.log("creating order in action");
   const { amount, currency } = orderData;
   if (!amount || !currency) {
-    throw new Error("Amount and currency are required");
+    throw new Error("amount and currency are required!");
   }
   const options = {
     amount: amount * 100,
@@ -33,8 +33,10 @@ export const verifyPayment = async (paymentData) => {
     process.env.RAZORPAY_KEY_SECRET
   );
   if (!isValid) {
+    console.error("Payment verification failed. Invalid signature");
     throw new Error("Payment verification failed. Invalid signature");
   }
   // process the payment
+  // e.g. save the payment details in your database
   return { ok: true };
 };

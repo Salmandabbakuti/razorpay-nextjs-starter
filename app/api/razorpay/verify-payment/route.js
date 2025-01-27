@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils";
 
 export async function POST(req) {
@@ -13,15 +14,19 @@ export async function POST(req) {
       process.env.RAZORPAY_KEY_SECRET
     );
     if (!isValid) {
-      console.log("Payment verification failed");
-      return Response.json({ message: "Invalid signature" }, { status: 400 });
+      console.log("Payment verification failed. Invalid signature");
+      return NextResponse.json(
+        { message: "Invalid signature" },
+        { status: 400 }
+      );
     }
-    // process the payment
+    // process the payment with order_id and payment_id
+    // e.g. save the payment details in your database
     console.log("Payment verified successfully");
-    return Response.json({ ok: true });
+    return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("Error verifying payment:", error);
-    return Response.json(
+    return NextResponse.json(
       { message: "Error verifying payment" },
       { status: 500 }
     );
